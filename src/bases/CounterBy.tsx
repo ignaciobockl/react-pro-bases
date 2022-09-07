@@ -11,11 +11,14 @@ interface CounterState {
 
 const CounterBy = ({ initialValue = 5 }: CounterProps) => {
   
-    const [counterState, setCounterState] = useState<CounterState>({
+    const [{ counter, clicks }, setCounterState] = useState<CounterState>({
         counter: initialValue,
         clicks: 0,
     });
-    const { counter, clicks } = counterState;
+    // const [counterState, setCounterState] = useState<CounterState>({
+    //     counter: initialValue,
+    //     clicks: 0,
+    // });
 
     const handleClick = ( value: number ): void => {
         setCounterState( ({ counter, clicks }) => ({
@@ -23,6 +26,12 @@ const CounterBy = ({ initialValue = 5 }: CounterProps) => {
             clicks: clicks + 1,
         }))
     }
+    // const handleClick = ( value: number ): void => {
+    //     setCounterState( prev => ({
+    //         counter: prev.counter + value,
+    //         clicks: prev.clicks + 1,
+    //     }))
+    // }
   
     return (
     <>
