@@ -8,7 +8,7 @@ interface CounterProps {
 }
 
 const CounterEffect = ({ initialValue = 5 }: CounterProps) => {
-  
+
     const [counter, setCounter] = useState<number>(initialValue);
 
     /*
@@ -18,8 +18,8 @@ const CounterEffect = ({ initialValue = 5 }: CounterProps) => {
     */
     const counterElement = useRef<HTMLHeadingElement>(null);
 
-    const handleClick = ( value: number ): void => {
-        counter < MAXIMUN_COUNT && setCounter( prev => prev + value );
+    const handleClick = (value: number): void => {
+        counter < MAXIMUN_COUNT && setCounter(prev => prev + value);
         // setCounter( prev => Math.min(prev + 1, MAXIMUN_COUNT)); // otra forma de hacerlo
     }
 
@@ -28,26 +28,33 @@ const CounterEffect = ({ initialValue = 5 }: CounterProps) => {
         tiene la misma firma de useEffect, solo que realiza el efecto despues de que se construyó el HTML.
     */
     useLayoutEffect(() => {
-      
-        (counter >= 10) && 
-            gsap.to(counterElement.current, { y: -10, duration: 0.2, ease: 'ease.out' })
-                .then(() => {
-                    gsap.to(counterElement.current, { y: 10, duration: 1, ease: 'bounce.out' })
-                });
+
+        if (counter < 10) return;
+
+        /* forma correcta de hacerlo */
+        const tl = gsap.timeline();
+        tl.to(counterElement.current, { y: -10, duration: 0.2, ease: 'ease.out' })
+            .to(counterElement.current, { y: 10, duration: 1, ease: 'bounce.out' });
+        /* ------------------------- */
+
+        // gsap.to(counterElement.current, { y: -10, duration: 0.2, ease: 'ease.out' })
+        //     .then(() => {
+        //         gsap.to(counterElement.current, { y: 10, duration: 1, ease: 'bounce.out' })
+        //     });
 
     }, [counter]);
-    
-  
-    return (
-    <>
-        <h1>CounterEffect:</h1>
-        <h2 ref={counterElement}>{counter}</h2>
 
-        <button onClick={() => handleClick(1)}>
-            +1
-        </button>
-    </>
-  )
+
+    return (
+        <>
+            <h1>CounterEffect:</h1>
+            <h2 ref={counterElement}>{counter}</h2>
+
+            <button onClick={() => handleClick(1)}>
+                +1
+            </button>
+        </>
+    )
 }
 
 export default CounterEffect;
